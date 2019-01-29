@@ -175,16 +175,64 @@ def findPath(path):
                 #print(currNode)
                 directions.append(findLeftRight(prevNode, currNode, nextNode))
 
-    print(directions)
-#====================================================================================
+    print(directions)  
+#====================================MAIN CODE================================================
+#====================================Orientation Detector================================================
+def findOrientation(lastSlope,reqSlope):
+    commands = []
+    if(lastSlope == reqSlope):
+        commands.append("PICK")
+    elif(lastSlope == 0):
+        if(reqSlope==-1):
+            commands.append("R")
+            commands.append("R")
+        elif(reqSlope==1):
+            commands.append("L")
+            commands.append("L")
+        commands.append("PICK")    
+    elif(lastSlope == 1):
+        if(reqSlope==0):
+            commands.append("R")
+            commands.append("R")
+        elif(reqSlope==-1):
+            commands.append("L")
+            commands.append("L")
+        commands.append("PICK")
+    elif(lastSlope == -1):
+        if(reqSlope==1):
+            commands.append("R")
+            commands.append("R")
+        elif(reqSlope==0):
+            commands.append("L")
+            commands.append("L")
+        commands.append("PICK")
+    print(commands)
+            
+#====================================MAIN CODE================================================
+
+#1===========================
 path = [25,19,20,14,15]
 findPath(path)
 lastSlope = (ourNodesDict[15][0]-ourNodesDict[14][0])/(ourNodesDict[15][1]-ourNodesDict[14][1])
 
+facePebble = 3
+faceAxis = 1 # 1 ----> slope = 0
+reqSlope = 0
+findOrientation(lastSlope,reqSlope)
+
+#2===========================
 path = [15,14,20]
 #Update prevNode before going to next:
 findPath(path)
 lastSlope = (ourNodesDict[20][0]-ourNodesDict[14][0])/(ourNodesDict[20][1]-ourNodesDict[14][1])
+facePebble = 5
+faceAxis = 3 # 3 ----> slope = 1
+reqSlope = 1
+findOrientation(lastSlope,reqSlope)
 
+#2===========================
 path = [20,26,27]
 findPath(path)
+lastSlope = (ourNodesDict[27][0]-ourNodesDict[26][0])/(ourNodesDict[27][1]-ourNodesDict[26][1])
+reqSlope = -1
+findOrientation(lastSlope,reqSlope)
