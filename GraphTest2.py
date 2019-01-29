@@ -148,8 +148,7 @@ def findPath(path):
     global lastSlope
     directions = []
     for i in range(0,len(path)-1):
-        print(i)
-
+        #print(i)\
         if i==0:
             directions.append(findStartLeftRight(lastSlope,path[0],path[1]))
         else:
@@ -186,26 +185,41 @@ def findOrientation(lastSlope,reqSlope):
         if(reqSlope==-1):
             commands.append("R")
             commands.append("R")
+            commands.append("PICK")
+            commands.append("L")
+            commands.append("L")
         elif(reqSlope==1):
             commands.append("L")
             commands.append("L")
-        commands.append("PICK")    
+            commands.append("PICK")
+            commands.append("R")
+            commands.append("R")
     elif(lastSlope == 1):
         if(reqSlope==0):
             commands.append("R")
             commands.append("R")
+            commands.append("PICK")
+            commands.append("L")
+            commands.append("L")
         elif(reqSlope==-1):
             commands.append("L")
             commands.append("L")
-        commands.append("PICK")
+            commands.append("PICK")
+            commands.append("R")
+            commands.append("R")
     elif(lastSlope == -1):
         if(reqSlope==1):
             commands.append("R")
             commands.append("R")
+            commands.append("PICK")
+            commands.append("L")
+            commands.append("L")
         elif(reqSlope==0):
             commands.append("L")
             commands.append("L")
-        commands.append("PICK")
+            commands.append("PICK")
+            commands.append("R")
+            commands.append("R")
     print(commands)
             
 #====================================MAIN CODE================================================
