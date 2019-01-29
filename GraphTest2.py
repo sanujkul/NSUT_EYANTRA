@@ -233,17 +233,14 @@ def updateLastSlope(path):
 path = [25,19,20,14,15]
 findPath(path)
 updateLastSlope(path)
-facePebble = 3
 faceAxis = 1 # 1 ----> slope = 0
 reqSlope = 0
 findOrientation(lastSlope,reqSlope)
 
 #2===========================
 path = [15,14,20]
-#Update prevNode before going to next:
 findPath(path)
 updateLastSlope(path)
-facePebble = 5
 faceAxis = 3 # 3 ----> slope = 1
 reqSlope = 1
 findOrientation(lastSlope,reqSlope)
