@@ -3,53 +3,53 @@ def findLeftRight(prev, curr, nex):
     currSlope = (ourNodesDict[curr][0]-ourNodesDict[prev][0])/(ourNodesDict[curr][1]-ourNodesDict[prev][1])   #slope of current path
     nextSlope = (ourNodesDict[nex][0]-ourNodesDict[curr][0])/(ourNodesDict[nex][1]-ourNodesDict[curr][1])     #slope of path to be taken
     if currSlope==nextSlope:
-        return "U"
+        return 'U'
     if currSlope==0:
         #currDirection = (ourNodesDict[curr][0]-ourNodesDict[prev][0])                      #if +: current going right, - current goint left
         #if currDirection == -1:
         if nextSlope==1:
-           return "R"
+           return 'r'
         else:
-            return "L"
+            return 'l'
         
     if currSlope==1:
         if nextSlope==0:
-            return "L"
+            return 'l'
         else:
-            return "R"
+            return 'r'
         
     if currSlope==-1:
         if nextSlope==0:
-            return "R"
+            return 'r'
         else:
-            return "L"
+            return 'l'
 
 def findStartLeftRight(stSlope, curr, nex):
     currSlope = stSlope  #slope of current path
     nextSlope = (ourNodesDict[nex][0]-ourNodesDict[curr][0])/(ourNodesDict[nex][1]-ourNodesDict[curr][1])     #slope of path to be taken
 
     if currSlope==nextSlope:
-        return "U"
+        return 'U'
     
     if currSlope==0:
         #currDirection = (ourNodesDict[curr][0]-ourNodesDict[prev][0])                      #if +: current going right, - current goint left
         #if currDirection == -1:
         if nextSlope==1:
-           return "R"
+           return 'r'
         else:
-            return "L"
+            return 'l'
         
     if currSlope==1:
         if nextSlope==0:
-            return "L"
+            return 'l'
         else:
-            return "R"
+            return 'r'
         
     if currSlope==-1:
         if nextSlope==0:
-            return "R"
+            return 'r'
         else:
-            return "L"
+            return 'l'
 
 
 ourNodes = [[0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -142,6 +142,11 @@ print("=================================")
 
 prevNode = -1
 lastSlope = 0
+#====================================update Last Slope================================================
+def updateLastSlope(path):
+    global lastSlope
+    n = len(path)-1
+    lastSlope = (ourNodesDict[path[n]][0]-ourNodesDict[path[n-1]][0])/(ourNodesDict[path[n]][1]-ourNodesDict[path[n-1]][1])
 #====================================================================================
 def findPath(path):
     global prevNode
@@ -150,7 +155,14 @@ def findPath(path):
     for i in range(0,len(path)-1):
         #print(i)\
         if i==0:
-            directions.append(findStartLeftRight(lastSlope,path[0],path[1]))
+            toAppend = findStartLeftRight(lastSlope,path[0],path[1])
+            if toAppend == 'U':
+                directions.append('r')
+                directions.append('r')
+                directions.append('r')
+            else:
+                directions.append(toAppend)
+            directions.append('f')
         else:
             if i > 0:
                 prevNode  = path[i-1]
@@ -161,93 +173,106 @@ def findPath(path):
     
             if currNode==25 and prevNode==-1:
                 if ourNodesDict[nextNode][1]>ourNodesDict[currNode][1]:
-                    directions.append("L")
+                    directions.append('l')
                 else:
-                    path.append("R")
+                    path.append('r')
+                directions.append('f')    
             elif currNode==30 and prevNode==-1:
                 if ourNodesDict[nextNode][1]>ourNodesDict[currNode][1]:
-                    directions.append("R")
+                    directions.append('r')
                 else:
-                    directions.append("L")
+                    directions.append('l')
+                directions.append('f')    
             else:
                 #print(prevNode)
                 #print(currNode)
-                directions.append(findLeftRight(prevNode, currNode, nextNode))
-
-    print(directions)  
+                toAppend = findLeftRight(prevNode, currNode, nextNode)
+                if toAppend == 'U':
+                    directions.append('r')
+                    directions.append('r')
+                    directions.append('r')
+                else:
+                    directions.append(toAppend)
+                directions.append('f')
+    updateLastSlope(path)
+    return (directions)
 #====================================MAIN CODE================================================
+#====================================Convert Axis to Slope================================================
+def convertAxisToSlope(axis):
+    if axis == '1-1':
+        return 0
+    elif axis == '2-2':
+        return 1
+    elif axis == '3-3':
+        return -1
+    else:
+        return 99  #ERROR
+    
 #====================================Orientation Detector================================================
-def findOrientation(lastSlope,reqSlope):
+def findOrientation(lastSlope,axis):
+    reqSlope = convertAxisToSlope(axis)
     commands = []
     if(lastSlope == reqSlope):
-        commands.append("PICK")
+        commands.append("s")
     elif(lastSlope == 0):
         if(reqSlope==-1):
             commands.append("r")
             commands.append("r")
-            commands.append("PICK")
+            commands.append("s")
             commands.append("l")
             commands.append("l")
         elif(reqSlope==1):
             commands.append("l")
             commands.append("l")
-            commands.append("PICK")
+            commands.append("s")
             commands.append("r")
             commands.append("r")
     elif(lastSlope == 1):
         if(reqSlope==0):
             commands.append("r")
             commands.append("r")
-            commands.append("PICK")
+            commands.append("s")
             commands.append("l")
             commands.append("l")
         elif(reqSlope==-1):
             commands.append("l")
             commands.append("l")
-            commands.append("PICK")
+            commands.append("s")
             commands.append("r")
             commands.append("r")
     elif(lastSlope == -1):
         if(reqSlope==1):
             commands.append("r")
             commands.append("r")
-            commands.append("PICK")
+            commands.append("s")
             commands.append("l")
             commands.append("l")
         elif(reqSlope==0):
             commands.append("l")
             commands.append("l")
-            commands.append("PICK")
+            commands.append("s")
             commands.append("r")
             commands.append("r")
-    print(commands)
+    return commands
             
-#====================================update Last Slope================================================
-def updateLastSlope(path):
-    global lastSlope
-    n = len(path)-1
-    lastSlope = (ourNodesDict[path[n]][0]-ourNodesDict[path[n-1]][0])/(ourNodesDict[path[n]][1]-ourNodesDict[path[n-1]][1])
 
 #====================================MAIN CODE=================================
+def travelRoute(path,faceAxis):
+    p1 = findPath(path)
+    p2 = findOrientation(lastSlope,faceAxis)
+    p = p1 + p2
+    return p
 #1===========================
 path = [25,19,20,14,15]
-findPath(path)
-updateLastSlope(path)
-faceAxis = 1 # 1 ----> slope = 0
-reqSlope = 0
-findOrientation(lastSlope,reqSlope)
+faceAxis = '1-1'
+print(travelRoute(path,faceAxis))
 
 #2===========================
 path = [15,14,20]
-findPath(path)
-updateLastSlope(path)
-faceAxis = 3 # 3 ----> slope = 1
-reqSlope = 1
-findOrientation(lastSlope,reqSlope)
+faceAxis = '1-1'
+print(travelRoute(path,faceAxis))
 
 #2===========================
 path = [20,26,27]
-findPath(path)
-updateLastSlope(path)
-reqSlope = -1
-findOrientation(lastSlope,reqSlope)
+faceAxis = '2-2'
+print(travelRoute(path,faceAxis))
